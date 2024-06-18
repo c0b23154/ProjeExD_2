@@ -47,6 +47,31 @@ def kk_rtz(s_mv: tuple)-> dict:
 
     return kk_dict
 
+def GameOver():
+    """
+    引数：なし
+    戻り値：なし
+    衝突が起こった時にゲームオーバー画面を表示させるための関数
+    """
+    screen = pg.display.set_mode((WIDTH, HEIGHT))
+    kk_cryimg = pg.transform.rotozoom(pg.image.load("fig/8.png"), 0, 2.0)
+    kk_cryrct_1 = kk_cryimg.get_rect()
+    kk_cryrct_2 = kk_cryimg.get_rect()
+    kk_cryrct_1.center = 600, 470
+    kk_cryrct_2.center = 1025, 470
+    last = pg.Surface((WIDTH, HEIGHT))
+    pg.draw.rect(last, (0, 0, 0), (0, 0, WIDTH, HEIGHT))  #
+    last_rct = last.get_rect()
+    last_rct.center = 800, 450
+    last.set_alpha(130)  # 透明にする（なぜか画面が真っ黒になる）
+    screen.blit(last, last_rct)
+    fonto = pg.font.Font(None, 80)
+    txt = fonto.render("Game Over", True, (255, 255, 255))        
+    screen.blit(txt, [660, 450])
+    screen.blit(kk_cryimg, kk_cryrct_1)        
+    screen.blit(kk_cryimg, kk_cryrct_2)
+    pg.display.update()
+    return
 
 def main():
     pg.display.set_caption("逃げろ！こうかとん")
@@ -55,11 +80,6 @@ def main():
     kk_img = pg.transform.rotozoom(pg.image.load("fig/3.png"), 0, 2.0)
     kk_rct = kk_img.get_rect()
     kk_rct.center = 900, 400
-    kk_cryimg = pg.transform.rotozoom(pg.image.load("fig/8.png"), 0, 2.0)
-    kk_cryrct_1 = kk_cryimg.get_rect()
-    kk_cryrct_2 = kk_cryimg.get_rect()
-    kk_cryrct_1.center = 600, 470
-    kk_cryrct_2.center = 1025, 470
     bomb =pg.Surface((20, 20))  # 一辺が20のからのSureFaceをつくる
     pg.draw.circle(bomb, (255, 0, 0), (10, 10), 10)
     bomb.set_colorkey((0, 0, 0))
@@ -73,24 +93,10 @@ def main():
             if event.type == pg.QUIT: 
                 return
         if kk_rct.colliderect(bomb_rct):  # 衝突判定
-            last = pg.Surface((WIDTH, HEIGHT))
-            pg.draw.rect(last, (0, 0, 0), (0, 0, WIDTH, HEIGHT))
-            last_rct = last.get_rect()
-            last_rct.center = 800, 450
-            last.set_alpha(200)
-            screen.blit(last, last_rct)
-            fonto = pg.font.Font(None, 80)
-            txt = fonto.render("Game Over", True, (255, 255, 255))
-            screen.blit(txt, [660, 450])
-            screen.blit(kk_cryimg, kk_cryrct_1)
-            screen.blit(kk_cryimg, kk_cryrct_2)
-            pg.display.update()
+            GameOver()
             time.sleep(5)
-        
-            
             return  #ゲームオーバー
         screen.blit(bg_img, [0, 0]) 
-
         key_lst = pg.key.get_pressed()
         sum_mv = [0, 0]
         for k, v in DELTA.items():  # for文で辞書からkeyと要素を取り出す
@@ -106,12 +112,7 @@ def main():
             vx *= -1
         if not tate:
             vy *= -1
-        kk_ap = kk_rtz(sum_mv)
-        # for k, v in kk_ap.items():  # for文で辞書からkeyと要素を取り出す
-        #     if kk_ap[k]:
-        #         sum_mv[0] += v[0]
-        #         sum_mv[1] += v[1]
-        screen.blit(kk_ap[sum_mv][1], kk_rct)
+        screen.blit(kk_img, kk_rct)
         screen.blit(bomb, bomb_rct)
         pg.display.update()
         tmr += 1
