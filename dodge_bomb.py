@@ -2,6 +2,7 @@ import os
 import random
 import sys
 import pygame as pg
+import time
 
 
 WIDTH, HEIGHT = 1600, 900
@@ -28,6 +29,16 @@ def check_bound(rct: pg.Rect) -> tuple[bool, bool]:
     return yoko, tate
 
 
+def kk_rtz(s_mv: tuple, kk_sf):
+    """
+    
+    """
+    if s_mv[0] == 0:
+        if s_mv[1] == -5:
+            kk_sf = pg.transform.flip(kk_sf, False, True)
+    return {s_mv:kk_sf}
+
+
 def main():
     pg.display.set_caption("逃げろ！こうかとん")
     screen = pg.display.set_mode((WIDTH, HEIGHT))
@@ -35,6 +46,11 @@ def main():
     kk_img = pg.transform.rotozoom(pg.image.load("fig/3.png"), 0, 2.0)
     kk_rct = kk_img.get_rect()
     kk_rct.center = 900, 400
+    kk_cryimg = pg.transform.rotozoom(pg.image.load("fig/8.png"), 0, 2.0)
+    kk_cryrct_1 = kk_cryimg.get_rect()
+    kk_cryrct_2 = kk_cryimg.get_rect()
+    kk_cryrct_1.center = 600, 470
+    kk_cryrct_2.center = 1025, 470
     bomb =pg.Surface((20, 20))  # 一辺が20のからのSureFaceをつくる
     pg.draw.circle(bomb, (255, 0, 0), (10, 10), 10)
     bomb.set_colorkey((0, 0, 0))
@@ -48,6 +64,21 @@ def main():
             if event.type == pg.QUIT: 
                 return
         if kk_rct.colliderect(bomb_rct):  # 衝突判定
+            last = pg.Surface((WIDTH, HEIGHT))
+            pg.draw.rect(last, (0, 0, 0), (0, 0, WIDTH, HEIGHT))
+            last_rct = last.get_rect()
+            last_rct.center = 800, 450
+            last.set_alpha(200)
+            screen.blit(last, last_rct)
+            fonto = pg.font.Font(None, 80)
+            txt = fonto.render("Game Over", True, (255, 255, 255))
+            screen.blit(txt, [660, 450])
+            screen.blit(kk_cryimg, kk_cryrct_1)
+            screen.blit(kk_cryimg, kk_cryrct_2)
+            pg.display.update()
+            time.sleep(5)
+        
+            
             return  #ゲームオーバー
         screen.blit(bg_img, [0, 0]) 
 
@@ -66,6 +97,7 @@ def main():
             vx *= -1
         if not tate:
             vy *= -1
+        # kk = kk_rtz(sum_mv)
         screen.blit(kk_img, kk_rct)
         screen.blit(bomb, bomb_rct)
         pg.display.update()
