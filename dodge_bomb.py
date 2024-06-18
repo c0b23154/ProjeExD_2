@@ -39,13 +39,8 @@ def kk_rtz(s_mv: tuple)-> dict:
     if s_mv == [0, -5]:
         kk_img0 = pg.transform.rotozoom(k_img, 0, 2.0)
         kk_dict[0, -5] = kk_img0
-    # kk_img1 = pg.transform.rotozoom(kk_img0, 45, 2.0)
-    # kk_img2 = pg.transform.rotozoom(kk_img0, 90, 2.0)
-    # # kk_img3 = pg.transform.rotozoom(pg.image.load("fig/3.png"), 0, 2.0)
-    # for k in range(8):
-    #     k_img0[k] = pg.transform.rotozoom(k_img, r+45, 2.0)
-
     return kk_dict
+
 
 def GameOver():
     """
@@ -66,12 +61,13 @@ def GameOver():
     last.set_alpha(130)  # 透明にする（なぜか画面が真っ黒になる）
     screen.blit(last, last_rct)
     fonto = pg.font.Font(None, 80)
-    txt = fonto.render("Game Over", True, (255, 255, 255))        
+    txt = fonto.render("Game Over", True, (255, 255, 255))  # 画面に"GameOver"を表示する   
     screen.blit(txt, [660, 450])
     screen.blit(kk_cryimg, kk_cryrct_1)        
     screen.blit(kk_cryimg, kk_cryrct_2)
     pg.display.update()
     return
+
 
 def main():
     pg.display.set_caption("逃げろ！こうかとん")
@@ -95,7 +91,7 @@ def main():
         if kk_rct.colliderect(bomb_rct):  # 衝突判定
             GameOver()
             time.sleep(5)
-            return  #ゲームオーバー
+            return  # ゲームオーバー
         screen.blit(bg_img, [0, 0]) 
         key_lst = pg.key.get_pressed()
         sum_mv = [0, 0]
