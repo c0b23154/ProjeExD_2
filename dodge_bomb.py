@@ -17,7 +17,7 @@ os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
 def check_bound(rct: pg.Rect) -> tuple[bool, bool]:
     """
-    引数:こうかとんRect,または,爆弾Rect
+    引数:こうかとんRect,または爆弾Rect
     戻り値：真理値タプル（横方向，縦方向）
     画面内ならTrue,画面外ならFalse
     """
