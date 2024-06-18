@@ -29,14 +29,23 @@ def check_bound(rct: pg.Rect) -> tuple[bool, bool]:
     return yoko, tate
 
 
-def kk_rtz(s_mv: tuple, kk_sf):
+def kk_rtz(s_mv: tuple)-> dict: 
     """
-    
+    引数:押下キーに対する移動量の合計値
+    戻り値：引数をキー,rotozoom下SureFaseを値とした辞書
     """
-    if s_mv[0] == 0:
-        if s_mv[1] == -5:
-            kk_sf = pg.transform.flip(kk_sf, False, True)
-    return {s_mv:kk_sf}
+    kk_dict = {}
+    k_img = pg.transform.flip(pg.image.load("fig/3.png"), False, True)
+    if s_mv == [0, -5]:
+        kk_img0 = pg.transform.rotozoom(k_img, 0, 2.0)
+        kk_dict[0, -5] = kk_img0
+    # kk_img1 = pg.transform.rotozoom(kk_img0, 45, 2.0)
+    # kk_img2 = pg.transform.rotozoom(kk_img0, 90, 2.0)
+    # # kk_img3 = pg.transform.rotozoom(pg.image.load("fig/3.png"), 0, 2.0)
+    # for k in range(8):
+    #     k_img0[k] = pg.transform.rotozoom(k_img, r+45, 2.0)
+
+    return kk_dict
 
 
 def main():
@@ -97,8 +106,12 @@ def main():
             vx *= -1
         if not tate:
             vy *= -1
-        # kk = kk_rtz(sum_mv)
-        screen.blit(kk_img, kk_rct)
+        kk_ap = kk_rtz(sum_mv)
+        # for k, v in kk_ap.items():  # for文で辞書からkeyと要素を取り出す
+        #     if kk_ap[k]:
+        #         sum_mv[0] += v[0]
+        #         sum_mv[1] += v[1]
+        screen.blit(kk_ap[sum_mv][1], kk_rct)
         screen.blit(bomb, bomb_rct)
         pg.display.update()
         tmr += 1
