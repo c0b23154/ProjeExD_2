@@ -42,13 +42,12 @@ def kk_rtz(s_mv: tuple)-> dict:
     return kk_dict
 
 
-def GameOver():
+def GameOver(screen: pg.display):
     """
-    引数：なし
+    引数：画面設定
     戻り値：なし
     衝突が起こった時にゲームオーバー画面を表示させるための関数
     """
-    screen = pg.display.set_mode((WIDTH, HEIGHT))
     kk_cryimg = pg.transform.rotozoom(pg.image.load("fig/8.png"), 0, 2.0)
     kk_cryrct_1 = kk_cryimg.get_rect()
     kk_cryrct_2 = kk_cryimg.get_rect()
@@ -58,7 +57,7 @@ def GameOver():
     pg.draw.rect(last, (0, 0, 0), (0, 0, WIDTH, HEIGHT))  #
     last_rct = last.get_rect()
     last_rct.center = 800, 450
-    last.set_alpha(130)  # 透明にする（なぜか画面が真っ黒になる）
+    last.set_alpha(150)  # 透明にする（なぜか画面が真っ黒になる）
     screen.blit(last, last_rct)
     fonto = pg.font.Font(None, 80)
     txt = fonto.render("Game Over", True, (255, 255, 255))  # 画面に"GameOver"を表示する   
@@ -66,7 +65,7 @@ def GameOver():
     screen.blit(kk_cryimg, kk_cryrct_1)        
     screen.blit(kk_cryimg, kk_cryrct_2)
     pg.display.update()
-    return
+    return last
 
 
 def main():
@@ -89,7 +88,7 @@ def main():
             if event.type == pg.QUIT: 
                 return
         if kk_rct.colliderect(bomb_rct):  # 衝突判定
-            GameOver()
+            GameOver(screen)
             time.sleep(5)
             return  # ゲームオーバー
         screen.blit(bg_img, [0, 0]) 
